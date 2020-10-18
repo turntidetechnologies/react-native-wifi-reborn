@@ -108,7 +108,10 @@ RCT_EXPORT_METHOD(connectToProtectedSSID:(NSString*)ssid
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     // Prevent NEHotspotConfigurationManager error when connecting to an already connected network
-    if ([ssid isEqualToString:[self getWifiSSID]]) resolve(nil);
+    if ([ssid isEqualToString:[self getWifiSSID]]) {
+        resolve(nil);
+        return;
+    }
     if (@available(iOS 11.0, *)) {
         NEHotspotConfiguration* configuration;
         // Check if open network
@@ -210,11 +213,11 @@ RCT_REMAP_METHOD(getCurrentWifiSSID,
 
 - (NSString *)parseError:(NSError *)error {
     if (@available(iOS 11, *)) {
-        
+
         if (!error) {
             return [ConnectError code:UnableToConnect];
         };
-        
+
         /*
          NEHotspotConfigurationErrorInvalid                         = 0,
          NEHotspotConfigurationErrorInvalidSSID                     = 1,
